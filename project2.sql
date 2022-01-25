@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 17, 2022 at 08:09 AM
+-- Generation Time: Jan 25, 2022 at 09:14 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -34,7 +34,7 @@ CREATE TABLE `booking` (
   `time_end` time NOT NULL,
   `all_time` int(11) NOT NULL,
   `total` int(5) NOT NULL,
-  `stadium_id` int(1) NOT NULL,
+  `divistion_id` int(1) NOT NULL,
   `m_id` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_thai_520_w2;
 
@@ -42,7 +42,7 @@ CREATE TABLE `booking` (
 -- Dumping data for table `booking`
 --
 
-INSERT INTO `booking` (`booking_id`, `booking_date`, `time_start`, `time_end`, `all_time`, `total`, `stadium_id`, `m_id`) VALUES
+INSERT INTO `booking` (`booking_id`, `booking_date`, `time_start`, `time_end`, `all_time`, `total`, `divistion_id`, `m_id`) VALUES
 (87, '2021-03-12', '19:00:00', '22:00:00', 3, 1500, 1, 107);
 
 -- --------------------------------------------------------
@@ -52,7 +52,7 @@ INSERT INTO `booking` (`booking_id`, `booking_date`, `time_start`, `time_end`, `
 --
 
 CREATE TABLE `divistion` (
-  `stadium_id` int(1) NOT NULL,
+  `divistion_id` int(1) NOT NULL,
   `stadium_name` varchar(20) COLLATE utf8_thai_520_w2 NOT NULL,
   `divistion_number` varchar(10) COLLATE utf8_thai_520_w2 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_thai_520_w2;
@@ -61,8 +61,8 @@ CREATE TABLE `divistion` (
 -- Dumping data for table `divistion`
 --
 
-INSERT INTO `divistion` (`stadium_id`, `stadium_name`, `divistion_number`) VALUES
-(30, 'กองพัน', '0980483301');
+INSERT INTO `divistion` (`divistion_id`, `stadium_name`, `divistion_number`) VALUES
+(1, 'สารณะสุข', '1150');
 
 -- --------------------------------------------------------
 
@@ -78,15 +78,16 @@ CREATE TABLE `employee` (
   `emp_tel` varchar(10) COLLATE utf8_thai_520_w2 NOT NULL,
   `emp_addresss` text COLLATE utf8_thai_520_w2 NOT NULL,
   `emp_username` varchar(20) COLLATE utf8_thai_520_w2 NOT NULL,
-  `emp_password` varchar(100) COLLATE utf8_thai_520_w2 NOT NULL
+  `emp_password` varchar(100) COLLATE utf8_thai_520_w2 NOT NULL,
+  `divistion_id` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_thai_520_w2;
 
 --
 -- Dumping data for table `employee`
 --
 
-INSERT INTO `employee` (`emp_id`, `emp_firstname`, `emp_lastname`, `emp_email`, `emp_tel`, `emp_addresss`, `emp_username`, `emp_password`) VALUES
-(1, 'Thadphong', 'Noidam', '6310210710@email.psu.ac.th', '0805406397', 'Hatyai', 'tiee', 'tiee');
+INSERT INTO `employee` (`emp_id`, `emp_firstname`, `emp_lastname`, `emp_email`, `emp_tel`, `emp_addresss`, `emp_username`, `emp_password`, `divistion_id`) VALUES
+(1, 'Thadphong', 'Noidam', '6310210710@email.psu.ac.th', '0805406397', 'Hatyai', 'tiee', 'tiee', 1);
 
 -- --------------------------------------------------------
 
@@ -101,18 +102,37 @@ CREATE TABLE `member` (
   `m_email` varchar(50) COLLATE utf8_thai_520_w2 NOT NULL,
   `m_tel` varchar(10) COLLATE utf8_thai_520_w2 NOT NULL,
   `m_address` text COLLATE utf8_thai_520_w2 NOT NULL,
-  `m_username` varchar(20) COLLATE utf8_thai_520_w2 NOT NULL,
   `m_password` varchar(100) COLLATE utf8_thai_520_w2 NOT NULL,
-  `coin` int(5) NOT NULL DEFAULT 0,
-  `emp_id` varchar(20) COLLATE utf8_thai_520_w2 NOT NULL
+  `emp_id` varchar(20) COLLATE utf8_thai_520_w2 NOT NULL,
+  `Position_id` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_thai_520_w2;
 
 --
 -- Dumping data for table `member`
 --
 
-INSERT INTO `member` (`m_id`, `m_firstname`, `m_lastname`, `m_email`, `m_tel`, `m_address`, `m_username`, `m_password`, `coin`, `emp_id`) VALUES
-(108, 'ชาญตะวัน', 'จำรูญศิลป์', 'teeza007@email.com', '0873931606', 'คลองเรียน2', 'Chantawan', '123456789', 0, 'Cnine');
+INSERT INTO `member` (`m_id`, `m_firstname`, `m_lastname`, `m_email`, `m_tel`, `m_address`, `m_password`, `emp_id`, `Position_id`) VALUES
+(116, 'Chantawan', 'Janroonsilp', 'love-za60@hotmail.com', '0980483301', '545156151', '1234', 'tiee', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `position`
+--
+
+CREATE TABLE `position` (
+  `Position_id` int(6) NOT NULL,
+  `Position_name` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `position`
+--
+
+INSERT INTO `position` (`Position_id`, `Position_name`) VALUES
+(1, 'พนักงาน'),
+(2, 'หัวหน้างาน'),
+(3, 'เลขานุการ');
 
 -- --------------------------------------------------------
 
@@ -138,52 +158,6 @@ INSERT INTO `stadium_type` (`type_id`, `type_st_name`, `type_price`, `min_person
 -- --------------------------------------------------------
 
 --
--- Table structure for table `topup`
---
-
-CREATE TABLE `topup` (
-  `topup_id` int(3) NOT NULL,
-  `topup_amount` int(5) NOT NULL,
-  `topup_date` date NOT NULL,
-  `topup_time` time NOT NULL,
-  `m_id` int(3) NOT NULL,
-  `emp_id` int(3) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_thai_520_w2;
-
---
--- Dumping data for table `topup`
---
-
-INSERT INTO `topup` (`topup_id`, `topup_amount`, `topup_date`, `topup_time`, `m_id`, `emp_id`) VALUES
-(95, 500, '2021-03-12', '12:24:46', 88, 1),
-(96, 777, '2021-03-12', '12:27:37', 94, 1),
-(97, 5555, '2021-03-12', '00:00:00', 94, 1),
-(98, 5555, '2021-03-12', '00:00:00', 94, 1),
-(99, 5555, '2021-03-12', '00:00:00', 94, 1),
-(100, 505, '2021-03-12', '00:00:00', 94, 1),
-(101, 555, '2021-03-12', '00:00:00', 94, 1),
-(102, 500, '2021-03-12', '00:00:00', 94, 1),
-(103, 800, '2021-03-12', '12:34:57', 94, 1),
-(104, 1, '2021-03-12', '12:37:52', 94, 1),
-(105, 1, '2021-03-12', '12:40:01', 94, 1),
-(106, 0, '2021-03-12', '12:40:36', 94, 1),
-(107, 111, '2021-03-12', '14:22:40', 94, 1),
-(108, 222, '2021-03-12', '14:22:40', 94, 1),
-(109, 100, '2021-03-12', '14:22:40', 94, 1),
-(110, 0, '2021-03-12', '14:22:40', 94, 1),
-(111, 999, '2021-03-12', '14:22:40', 94, 1),
-(112, 999, '2021-03-12', '14:25:55', 94, 1),
-(113, 8000, '2021-03-12', '15:16:55', 106, 1),
-(114, 9000, '2021-03-12', '16:33:52', 107, 1),
-(115, 200, '2021-03-12', '16:37:51', 107, 1),
-(116, 800, '2021-03-12', '16:37:51', 107, 1),
-(117, 100, '2021-03-12', '16:45:47', 107, 1),
-(118, 200, '2021-03-12', '16:45:55', 107, 1),
-(119, 789, '2021-03-12', '16:46:19', 107, 1);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `uploadfile`
 --
 
@@ -199,7 +173,8 @@ CREATE TABLE `uploadfile` (
 
 INSERT INTO `uploadfile` (`fileID`, `fileupload`, `dateup`) VALUES
 (5, '202201101689825035.pdf', '2022-01-10 08:28:06'),
-(6, '202201131354647382.pdf', '2022-01-13 08:14:14');
+(6, '202201131354647382.pdf', '2022-01-13 08:14:14'),
+(7, '202201191841917085.pdf', '2022-01-19 03:53:58');
 
 --
 -- Indexes for dumped tables
@@ -215,7 +190,7 @@ ALTER TABLE `booking`
 -- Indexes for table `divistion`
 --
 ALTER TABLE `divistion`
-  ADD PRIMARY KEY (`stadium_id`);
+  ADD PRIMARY KEY (`divistion_id`);
 
 --
 -- Indexes for table `employee`
@@ -230,16 +205,16 @@ ALTER TABLE `member`
   ADD PRIMARY KEY (`m_id`);
 
 --
+-- Indexes for table `position`
+--
+ALTER TABLE `position`
+  ADD PRIMARY KEY (`Position_id`);
+
+--
 -- Indexes for table `stadium_type`
 --
 ALTER TABLE `stadium_type`
   ADD PRIMARY KEY (`type_id`);
-
---
--- Indexes for table `topup`
---
-ALTER TABLE `topup`
-  ADD PRIMARY KEY (`topup_id`);
 
 --
 -- Indexes for table `uploadfile`
@@ -261,7 +236,7 @@ ALTER TABLE `booking`
 -- AUTO_INCREMENT for table `divistion`
 --
 ALTER TABLE `divistion`
-  MODIFY `stadium_id` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `divistion_id` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `employee`
@@ -273,7 +248,7 @@ ALTER TABLE `employee`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `m_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `m_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- AUTO_INCREMENT for table `stadium_type`
@@ -282,16 +257,10 @@ ALTER TABLE `stadium_type`
   MODIFY `type_id` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `topup`
---
-ALTER TABLE `topup`
-  MODIFY `topup_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
-
---
 -- AUTO_INCREMENT for table `uploadfile`
 --
 ALTER TABLE `uploadfile`
-  MODIFY `fileID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `fileID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
