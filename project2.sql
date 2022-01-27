@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 25, 2022 at 11:58 AM
+-- Generation Time: Jan 27, 2022 at 11:30 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `divistion` (
-  `divistion_id` int(1) NOT NULL,
-  `stadium_name` varchar(20) COLLATE utf8_thai_520_w2 NOT NULL,
+  `divistion_id` int(2) NOT NULL,
+  `divistion_name` varchar(20) COLLATE utf8_thai_520_w2 NOT NULL,
   `divistion_number` varchar(10) COLLATE utf8_thai_520_w2 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_thai_520_w2;
 
@@ -37,9 +37,28 @@ CREATE TABLE `divistion` (
 -- Dumping data for table `divistion`
 --
 
-INSERT INTO `divistion` (`divistion_id`, `stadium_name`, `divistion_number`) VALUES
-(1, 'สารณะสุข', '1150'),
-(36, 'กองร้อย', '1234156');
+INSERT INTO `divistion` (`divistion_id`, `divistion_name`, `divistion_number`) VALUES
+(1, 'กองร้อย', '15115'),
+(2, 'กองร้อย', '80880');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `document`
+--
+
+CREATE TABLE `document` (
+  `document_id` int(50) NOT NULL,
+  `document_name` varchar(50) NOT NULL,
+  `document_type` int(1) NOT NULL,
+  `document_detail` varchar(50) NOT NULL,
+  `emp_id` int(3) NOT NULL,
+  `divistion_id` int(2) NOT NULL,
+  `documenttype_id` int(1) NOT NULL,
+  `documentstatus_id` int(1) NOT NULL,
+  `document_file` varchar(50) NOT NULL,
+  `document_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -51,20 +70,42 @@ CREATE TABLE `employee` (
   `emp_id` int(3) NOT NULL,
   `emp_firstname` varchar(50) COLLATE utf8_thai_520_w2 NOT NULL,
   `emp_lastname` varchar(50) COLLATE utf8_thai_520_w2 NOT NULL,
+  `emp_cardid` varchar(50) COLLATE utf8_thai_520_w2 NOT NULL,
   `emp_email` varchar(50) COLLATE utf8_thai_520_w2 NOT NULL,
   `emp_tel` varchar(10) COLLATE utf8_thai_520_w2 NOT NULL,
   `emp_password` varchar(100) COLLATE utf8_thai_520_w2 NOT NULL,
-  `divistion_id` int(1) NOT NULL,
-  `Position_id` int(6) NOT NULL
+  `divistion_id` int(2) NOT NULL,
+  `Position_id` int(6) NOT NULL,
+  `gender_id` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_thai_520_w2;
 
 --
 -- Dumping data for table `employee`
 --
 
-INSERT INTO `employee` (`emp_id`, `emp_firstname`, `emp_lastname`, `emp_email`, `emp_tel`, `emp_password`, `divistion_id`, `Position_id`) VALUES
-(1, 'tiee', 'Noidam', '6310210710@email.psu.ac.th', '0805406397', '1234', 1, 4),
-(2, 'chantawan', 'jamroonsilp', 'love-za60@hotmail.com', '0980483301', '1234', 1, 2);
+INSERT INTO `employee` (`emp_id`, `emp_firstname`, `emp_lastname`, `emp_cardid`, `emp_email`, `emp_tel`, `emp_password`, `divistion_id`, `Position_id`, `gender_id`) VALUES
+(1, 'chantawans', 'jamroonsilp', '1969800222655', 'love-za60@hgotmail.com', '0980483301', '1234', 2, 2, 1),
+(2, 'chantawan1', 'jamroonsilp', '1969800222658', 'love-za68@hgotmail.com', '0980483301', '1234', 2, 1, 1),
+(8, 'chantawan', 'jamroonsilp', '1969800222651', 'asdasd@hgotmail.com', '0980483302', '1234', 2, 4, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gender`
+--
+
+CREATE TABLE `gender` (
+  `gender_id` int(1) NOT NULL,
+  `gender_name` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `gender`
+--
+
+INSERT INTO `gender` (`gender_id`, `gender_name`) VALUES
+(1, 'ชาย'),
+(2, 'หญิง');
 
 -- --------------------------------------------------------
 
@@ -86,27 +127,6 @@ INSERT INTO `position` (`Position_id`, `Position_name`) VALUES
 (2, 'หัวหน้างาน'),
 (3, 'เลขานุการ'),
 (4, 'ผู้ดูแล(หน่วยสารบัญกลาง)');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `stadium_type`
---
-
-CREATE TABLE `stadium_type` (
-  `type_id` int(1) NOT NULL,
-  `type_st_name` varchar(20) COLLATE utf8_thai_520_w2 NOT NULL,
-  `type_price` int(5) NOT NULL,
-  `min_person` int(2) NOT NULL,
-  `max_person` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_thai_520_w2;
-
---
--- Dumping data for table `stadium_type`
---
-
-INSERT INTO `stadium_type` (`type_id`, `type_st_name`, `type_price`, `min_person`, `max_person`) VALUES
-(1, 'เบอร์โทรศัพท์กอง', 300, 6, 12);
 
 -- --------------------------------------------------------
 
@@ -140,22 +160,28 @@ ALTER TABLE `divistion`
   ADD PRIMARY KEY (`divistion_id`);
 
 --
+-- Indexes for table `document`
+--
+ALTER TABLE `document`
+  ADD PRIMARY KEY (`document_id`);
+
+--
 -- Indexes for table `employee`
 --
 ALTER TABLE `employee`
   ADD PRIMARY KEY (`emp_id`);
 
 --
+-- Indexes for table `gender`
+--
+ALTER TABLE `gender`
+  ADD PRIMARY KEY (`gender_id`);
+
+--
 -- Indexes for table `position`
 --
 ALTER TABLE `position`
   ADD PRIMARY KEY (`Position_id`);
-
---
--- Indexes for table `stadium_type`
---
-ALTER TABLE `stadium_type`
-  ADD PRIMARY KEY (`type_id`);
 
 --
 -- Indexes for table `uploadfile`
@@ -171,19 +197,13 @@ ALTER TABLE `uploadfile`
 -- AUTO_INCREMENT for table `divistion`
 --
 ALTER TABLE `divistion`
-  MODIFY `divistion_id` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `divistion_id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `emp_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `stadium_type`
---
-ALTER TABLE `stadium_type`
-  MODIFY `type_id` int(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `emp_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `uploadfile`
